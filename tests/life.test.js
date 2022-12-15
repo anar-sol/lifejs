@@ -3,7 +3,7 @@ import { Life } from "../src/life.js";
 describe("Life", () => {
 
     const COLUMNS = 20;
-    const ROWS = 20;
+    const ROWS = 15;
     let life;
 
     beforeEach(() => {
