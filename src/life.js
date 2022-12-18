@@ -10,7 +10,9 @@ class Life {
     constructor(columns, rows) {
         this.#columns = columns;
         this.#rows = rows;
-        this.#initGrid(columns, rows);
+        const grid = this.#newGrid(columns, rows);
+        this.#initGrid(grid);
+        this.#grid = grid;
     }
 
     static newLife(columns, rows) {
@@ -26,19 +28,60 @@ class Life {
     }
 
     setCellState(col, row, state) {
-        this.#grid[col][row] = state;
+        this.#setCellState(this.#grid, col, row, state);
     }
 
     isCellAlive(col, row) {
         return this.#grid[col][row];
     }
 
-    #initGrid(columns, rows) {
-        this.#grid = new Array(columns);
-        for (let col = 0; col < columns; col++) {
-            this.#grid[col] = new Array(rows);
-            this.#grid[col].fill(Life.CELL_STATE_DEAD);
+    nextState() {
+        const newGrid = this.#newGrid(this.#columns, this.#rows);
+
+        for (let col = 0; col < this.#columns; col++) {
+            for (let row = 0; row < this.#rows; row++) {
+                const livingNeighbors = this.#getLivingNeighborCount(col, row);
+                if (livingNeighbors < 2) {
+                    this.#setCellState(newGrid, col, row, Life.CELL_STATE_DEAD);
+                } else if (livingNeighbors < 4) {
+                    this.#setCellState(newGrid ,col, row, Life.CELL_STATE_ALIVE);
+                } else {
+                    this.#setCellState(newGrid, col, row, Life.CELL_STATE_DEAD);
+                }
+            }
         }
+        this.#grid = newGrid;
+    }
+
+    #initGrid(grid) {
+        for (let col = 0; col < grid.length; col++) {
+            grid[col].fill(Life.CELL_STATE_DEAD);
+        }
+    }
+
+    #newGrid(columns, rows) {
+        const grid = new Array(columns);
+        for (let col = 0; col < columns; col++) {
+            grid[col] = new Array(rows);
+        }
+        return grid;
+    }
+
+    #setCellState(grid, col, row, state) {
+        grid[col][row] = state;
+    }
+
+    #getLivingNeighborCount(cellCol, cellRow) {
+        const neighbors = [];
+        for (let col = cellCol - 1; col <= cellCol + 1; col++) {
+            for (let row = cellRow - 1; row <= cellRow + 1; row++) {
+                const cell = this.#grid[col]?.[row];
+                if (cell === true && !(col === cellCol && row === cellRow)) {
+                    neighbors.push(cell);
+                }
+            }
+        }
+        return neighbors.length;
     }
 }
 
