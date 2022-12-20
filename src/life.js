@@ -27,11 +27,11 @@ class Life {
         return this.#rows;
     }
 
-    setCellState(col, row, state) {
+    setCellState({ col, row }, state) {
         this.#setCellState(this.#grid, col, row, state);
     }
 
-    isCellAlive(col, row) {
+    isCellAlive({ col, row }) {
         return this.#grid[col][row];
     }
 
@@ -41,10 +41,11 @@ class Life {
         for (let col = 0; col < this.#columns; col++) {
             for (let row = 0; row < this.#rows; row++) {
                 const livingNeighbors = this.#getLivingNeighborCount(col, row);
-                if (livingNeighbors < 2) {
-                    this.#setCellState(newGrid, col, row, Life.CELL_STATE_DEAD);
-                } else if (livingNeighbors < 4) {
-                    this.#setCellState(newGrid ,col, row, Life.CELL_STATE_ALIVE);
+
+                if (this.isCellAlive({ col, row }) && (livingNeighbors === 2 || livingNeighbors === 3)) {
+                    this.#setCellState(newGrid, col, row, Life.CELL_STATE_ALIVE);
+                } else if (!this.isCellAlive({ col, row }) && livingNeighbors === 3) {
+                    this.#setCellState(newGrid, col, row, Life.CELL_STATE_ALIVE);
                 } else {
                     this.#setCellState(newGrid, col, row, Life.CELL_STATE_DEAD);
                 }
