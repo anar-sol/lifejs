@@ -1,8 +1,5 @@
 class Life {
 
-    static CELL_STATE_ALIVE = true;
-    static CELL_STATE_DEAD = false;
-
     #columns;
     #rows;
     #grid;
@@ -17,6 +14,14 @@ class Life {
 
     static newLife(columns, rows) {
         return new Life(columns, rows);
+    }
+
+    static get CELL_STATE_ALIVE() {
+        return true;
+    }
+
+    static get CELL_STATE_DEAD() {
+        return false;
     }
 
     get columns() {
