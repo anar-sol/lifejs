@@ -1,0 +1,10 @@
+body {
+    margin: 0;
+    color: white;
+    background-color: #0C0C0D;
+}
+
+.canvas-container {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+}
