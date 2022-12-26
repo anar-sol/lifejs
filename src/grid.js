@@ -1,3 +1,5 @@
+import { Life } from "./life.js";
+
 class Grid {
 
     #canvas;
