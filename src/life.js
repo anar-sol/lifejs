@@ -38,6 +38,11 @@ class Life {
         this.#setCellState(this.#grid, col, row, state);
     }
 
+    toggleCellState(cell) {
+        if (this.isCellAlive(cell)) this.setCellState(cell, Life.CELL_STATE_DEAD);
+        else this.setCellState(cell, Life.CELL_STATE_ALIVE);
+    }
+
     isCellAlive({ col, row }) {
         [col, row] = this.#getEquivalentCoord(col, row);
 
@@ -95,7 +100,7 @@ class Life {
         const neighbors = [];
         for (let col = cellCol - 1; col <= cellCol + 1; col++) {
             for (let row = cellRow - 1; row <= cellRow + 1; row++) {
-                const cellState = this.isCellAlive({col, row});
+                const cellState = this.isCellAlive({ col, row });
                 if (cellState === true && !(col === cellCol && row === cellRow)) {
                     neighbors.push(cellState);
                 }

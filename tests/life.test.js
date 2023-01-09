@@ -203,6 +203,18 @@ describe("Life", () => {
         expect(life.isCellAlive(equivalentCell)).toBe(false);
     });
 
+    test("toggleCellState", () => {
+        const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
+
+        expect(life.isCellAlive(cell)).toBe(false);
+
+        life.toggleCellState(cell);
+        expect(life.isCellAlive(cell)).toBe(true);
+
+        life.toggleCellState(cell);
+        expect(life.isCellAlive(cell)).toBe(false);
+    });
+
     test("next() a live cell with 0 live neighbors dies", () => {
         const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
 
