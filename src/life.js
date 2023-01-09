@@ -33,10 +33,14 @@ class Life {
     }
 
     setCellState({ col, row }, state) {
+        [col, row] = this.#getEquivalentCoord(col, row);
+
         this.#setCellState(this.#grid, col, row, state);
     }
 
     isCellAlive({ col, row }) {
+        [col, row] = this.#getEquivalentCoord(col, row);
+
         return this.#grid[col][row];
     }
 
@@ -77,13 +81,23 @@ class Life {
         grid[col][row] = state;
     }
 
+    #getEquivalentCoord(col, row) {
+        if (col >= this.columns) col %= this.columns;
+        if (row >= this.rows) row %= this.rows;
+
+        if (col < 0) col = this.columns + col;
+        if (row < 0) row = this.rows + row;
+
+        return [col, row];
+    }
+
     #getLivingNeighborCount(cellCol, cellRow) {
         const neighbors = [];
         for (let col = cellCol - 1; col <= cellCol + 1; col++) {
             for (let row = cellRow - 1; row <= cellRow + 1; row++) {
-                const cell = this.#grid[col]?.[row];
-                if (cell === true && !(col === cellCol && row === cellRow)) {
-                    neighbors.push(cell);
+                const cellState = this.isCellAlive({col, row});
+                if (cellState === true && !(col === cellCol && row === cellRow)) {
+                    neighbors.push(cellState);
                 }
             }
         }

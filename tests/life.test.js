@@ -113,6 +113,96 @@ describe("Life", () => {
         expect(life.isCellAlive(cell)).toBe(false);
     });
 
+    test("left and right edges are stitched together [negative]", () => {
+        const cell = { col: -1, row: 0 };
+        const equivalentCell = { col: COLUMNS - 1, row: 0 };
+
+        expect(life.isCellAlive(cell)).toBe(false);
+
+        life.setCellState(cell, Life.CELL_STATE_ALIVE);
+        expect(life.isCellAlive(cell)).toBe(true);
+        expect(life.isCellAlive(equivalentCell)).toBe(true);
+
+        life.setCellState(equivalentCell, Life.CELL_STATE_DEAD);
+        expect(life.isCellAlive(cell)).toBe(false);
+        expect(life.isCellAlive(equivalentCell)).toBe(false);
+    });
+
+    test("left and right edges are stitched together [positive]", () => {
+        const cell = { col: COLUMNS, row: 0 };
+        const equivalentCell = { col: 0, row: 0 };
+
+        expect(life.isCellAlive(cell)).toBe(false);
+
+        life.setCellState(cell, Life.CELL_STATE_ALIVE);
+        expect(life.isCellAlive(cell)).toBe(true);
+        expect(life.isCellAlive(equivalentCell)).toBe(true);
+
+        life.setCellState(equivalentCell, Life.CELL_STATE_DEAD);
+        expect(life.isCellAlive(cell)).toBe(false);
+        expect(life.isCellAlive(equivalentCell)).toBe(false);
+    });
+
+    test("top and bottom edges are stitched together [negative]", () => {
+        const cell = { col: 0, row: -1 };
+        const equivalentCell = { col: 0, row: ROWS - 1 };
+
+        expect(life.isCellAlive(cell)).toBe(false);
+
+        life.setCellState(cell, Life.CELL_STATE_ALIVE);
+        expect(life.isCellAlive(cell)).toBe(true);
+        expect(life.isCellAlive(equivalentCell)).toBe(true);
+
+        life.setCellState(equivalentCell, Life.CELL_STATE_DEAD);
+        expect(life.isCellAlive(cell)).toBe(false);
+        expect(life.isCellAlive(equivalentCell)).toBe(false);
+    });
+
+    test("top and bottom edges are stitched together [positive]", () => {
+        const cell = { col: 0, row: ROWS };
+        const equivalentCell = { col: 0, row: 0 };
+
+        expect(life.isCellAlive(cell)).toBe(false);
+
+        life.setCellState(cell, Life.CELL_STATE_ALIVE);
+        expect(life.isCellAlive(cell)).toBe(true);
+        expect(life.isCellAlive(equivalentCell)).toBe(true);
+
+        life.setCellState(equivalentCell, Life.CELL_STATE_DEAD);
+        expect(life.isCellAlive(cell)).toBe(false);
+        expect(life.isCellAlive(equivalentCell)).toBe(false);
+    });
+
+    test("top and bottom, left and right edges are stitched together [negative]", () => {
+        const cell = { col: -1, row: -1 };
+        const equivalentCell = { col: COLUMNS - 1, row: ROWS - 1 };
+
+        expect(life.isCellAlive(cell)).toBe(false);
+
+        life.setCellState(cell, Life.CELL_STATE_ALIVE);
+        expect(life.isCellAlive(cell)).toBe(true);
+        expect(life.isCellAlive(equivalentCell)).toBe(true);
+
+        life.setCellState(equivalentCell, Life.CELL_STATE_DEAD);
+        expect(life.isCellAlive(cell)).toBe(false);
+        expect(life.isCellAlive(equivalentCell)).toBe(false);
+    });
+
+    test("top and bottom, left and right edges are stitched together [positive]", () => {
+        const cell = { col: COLUMNS, row: ROWS };
+        const equivalentCell = { col: 0, row: 0 };
+
+        expect(life.isCellAlive(cell)).toBe(false);
+
+        life.setCellState(cell, Life.CELL_STATE_ALIVE);
+        expect(life.isCellAlive(cell)).toBe(true);
+        expect(life.isCellAlive(equivalentCell)).toBe(true);
+
+        life.setCellState(equivalentCell, Life.CELL_STATE_DEAD);
+        expect(life.isCellAlive(cell)).toBe(false);
+        expect(life.isCellAlive(equivalentCell)).toBe(false);
+    });
+
     test("next() a live cell with 0 live neighbors dies", () => {
         const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
 
@@ -146,10 +236,38 @@ describe("Life", () => {
         expect(life.isCellAlive(cell)).toBe(true);
     });
 
+    test("next() a live cell with 2 live neighbors lives [on the top edge]", () => {
+        const cell = { col: Math.trunc(COLUMNS / 2), row: 0 };
+        const topLeft = getRelativeCell(cell, RELATIVE_CELL_TOP_LEFT);
+        const top = getRelativeCell(cell, RELATIVE_CELL_TOP);
+
+        life.setCellState(cell, Life.CELL_STATE_ALIVE);
+        life.setCellState(topLeft, Life.CELL_STATE_ALIVE);
+        life.setCellState(top, Life.CELL_STATE_ALIVE);
+        life.nextState();
+
+        expect(life.isCellAlive(cell)).toBe(true);
+    });
+
     test("next() a live cell with 3 live neighbors lives", () => {
         const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
         const topLeft = getRelativeCell(cell, RELATIVE_CELL_TOP_LEFT);
         const top = getRelativeCell(cell, RELATIVE_CELL_TOP);
+        const right = getRelativeCell(cell, RELATIVE_CELL_RIGHT);
+
+        life.setCellState(cell, Life.CELL_STATE_ALIVE);
+        life.setCellState(topLeft, Life.CELL_STATE_ALIVE);
+        life.setCellState(top, Life.CELL_STATE_ALIVE);
+        life.setCellState(right, Life.CELL_STATE_ALIVE);
+        life.nextState();
+
+        expect(life.isCellAlive(cell)).toBe(true);
+    });
+
+    test("next() a live cell with 3 live neighbors lives [on the bottom edge]", () => {
+        const cell = { col: Math.trunc(COLUMNS / 2), row: ROWS - 1 };
+        const topLeft = getRelativeCell(cell, RELATIVE_CELL_BOTTOM_LEFT);
+        const top = getRelativeCell(cell, RELATIVE_CELL_BOTTOM);
         const right = getRelativeCell(cell, RELATIVE_CELL_RIGHT);
 
         life.setCellState(cell, Life.CELL_STATE_ALIVE);
@@ -178,8 +296,44 @@ describe("Life", () => {
         expect(life.isCellAlive(cell)).toBe(false);
     });
 
+    test("next() a live cell with 4 live neighbors dies [on the left edge]", () => {
+        const cell = { col: 0, row: Math.trunc(ROWS / 2) };
+        const topLeft = getRelativeCell(cell, RELATIVE_CELL_TOP_LEFT);
+        const top = getRelativeCell(cell, RELATIVE_CELL_TOP);
+        const left = getRelativeCell(cell, RELATIVE_CELL_LEFT);
+        const right = getRelativeCell(cell, RELATIVE_CELL_RIGHT);
+
+        life.setCellState(cell, Life.CELL_STATE_ALIVE);
+        life.setCellState(topLeft, Life.CELL_STATE_ALIVE);
+        life.setCellState(top, Life.CELL_STATE_ALIVE);
+        life.setCellState(left, Life.CELL_STATE_ALIVE);
+        life.setCellState(right, Life.CELL_STATE_ALIVE);
+        life.nextState();
+
+        expect(life.isCellAlive(cell)).toBe(false);
+    });
+
     test("next() a live cell with 5 live neighbors dies", () => {
         const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
+        const topLeft = getRelativeCell(cell, RELATIVE_CELL_TOP_LEFT);
+        const top = getRelativeCell(cell, RELATIVE_CELL_TOP);
+        const topRight = getRelativeCell(cell, RELATIVE_CELL_TOP_RIGHT);
+        const left = getRelativeCell(cell, RELATIVE_CELL_LEFT);
+        const right = getRelativeCell(cell, RELATIVE_CELL_RIGHT);
+
+        life.setCellState(cell, Life.CELL_STATE_ALIVE);
+        life.setCellState(topLeft, Life.CELL_STATE_ALIVE);
+        life.setCellState(top, Life.CELL_STATE_ALIVE);
+        life.setCellState(topRight, Life.CELL_STATE_ALIVE);
+        life.setCellState(left, Life.CELL_STATE_ALIVE);
+        life.setCellState(right, Life.CELL_STATE_ALIVE);
+        life.nextState();
+
+        expect(life.isCellAlive(cell)).toBe(false);
+    });
+
+    test("next() a live cell with 5 live neighbors dies [on the right edge]", () => {
+        const cell = { col: COLUMNS - 1, row: Math.trunc(ROWS / 2) };
         const topLeft = getRelativeCell(cell, RELATIVE_CELL_TOP_LEFT);
         const top = getRelativeCell(cell, RELATIVE_CELL_TOP);
         const topRight = getRelativeCell(cell, RELATIVE_CELL_TOP_RIGHT);
