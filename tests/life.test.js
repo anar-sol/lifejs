@@ -17,24 +17,24 @@ const RELATIVE_CELL_BOTTOM_RIGHT = 7;
  * 
  * return the cell coordinate relative
  */
-function getRelativeCell({ col, row }, position) {
+function getRelativeCell([col, row], position) {
     switch (position) {
         case RELATIVE_CELL_TOP_LEFT:
-            return { col: col - 1, row: row - 1 };
+            return [col - 1, row - 1];
         case RELATIVE_CELL_TOP:
-            return { col, row: row - 1 };
+            return [col, row - 1];
         case RELATIVE_CELL_TOP_RIGHT:
-            return { col: col + 1, row: row - 1 };
+            return [col + 1, row - 1];
         case RELATIVE_CELL_LEFT:
-            return { col: col - 1, row };
+            return [col - 1, row];
         case RELATIVE_CELL_RIGHT:
-            return { col: col + 1, row };
+            return [col + 1, row];
         case RELATIVE_CELL_BOTTOM_LEFT:
-            return { col: col - 1, row: row + 1 };
+            return [col - 1, row + 1];
         case RELATIVE_CELL_BOTTOM:
-            return { col, row: row + 1 };
+            return [col, row + 1];
         case RELATIVE_CELL_BOTTOM_RIGHT:
-            return { col: col + 1, row: row + 1 };
+            return [col + 1, row + 1];
     }
 }
 
@@ -54,7 +54,7 @@ describe("Life", () => {
     });
 
     test("isCellAlive (1, 1)", () => {
-        const cell = { col: 1, row: 1 };
+        const cell = [1, 1];
 
         expect(life.isCellAlive(cell)).toBe(false);
 
@@ -66,7 +66,7 @@ describe("Life", () => {
     });
 
     test("isCellAlive (0, 0)", () => {
-        const cell = { col: 0, row: 0 };
+        const cell = [0, 0];
 
         expect(life.isCellAlive(cell)).toBe(false);
 
@@ -78,7 +78,7 @@ describe("Life", () => {
     });
 
     test("isCellAlive (columns - 1, 0)", () => {
-        const cell = { col: COLUMNS - 1, row: 0 };
+        const cell = [-1, 0];
 
         expect(life.isCellAlive(cell)).toBe(false);
 
@@ -90,7 +90,7 @@ describe("Life", () => {
     });
 
     test("isCellAlive (0, rows - 1)", () => {
-        const cell = { col: 0, row: ROWS - 1 };
+        const cell = [0, ROWS - 1];
 
         expect(life.isCellAlive(cell)).toBe(false);
 
@@ -102,7 +102,7 @@ describe("Life", () => {
     });
 
     test("isCellAlive (columns - 1, rows - 1)", () => {
-        const cell = { col: COLUMNS - 1, row: ROWS - 1 };
+        const cell = [COLUMNS - 1, ROWS - 1];
 
         expect(life.isCellAlive(cell)).toBe(false);
 
@@ -114,8 +114,8 @@ describe("Life", () => {
     });
 
     test("left and right edges are stitched together [negative]", () => {
-        const cell = { col: -1, row: 0 };
-        const equivalentCell = { col: COLUMNS - 1, row: 0 };
+        const cell = [-1, 0];
+        const equivalentCell = [COLUMNS - 1, 0];
 
         expect(life.isCellAlive(cell)).toBe(false);
 
@@ -129,8 +129,8 @@ describe("Life", () => {
     });
 
     test("left and right edges are stitched together [positive]", () => {
-        const cell = { col: COLUMNS, row: 0 };
-        const equivalentCell = { col: 0, row: 0 };
+        const cell = [COLUMNS, 0];
+        const equivalentCell = [0, 0];
 
         expect(life.isCellAlive(cell)).toBe(false);
 
@@ -144,8 +144,8 @@ describe("Life", () => {
     });
 
     test("top and bottom edges are stitched together [negative]", () => {
-        const cell = { col: 0, row: -1 };
-        const equivalentCell = { col: 0, row: ROWS - 1 };
+        const cell = [0, -1];
+        const equivalentCell = [0, ROWS - 1];
 
         expect(life.isCellAlive(cell)).toBe(false);
 
@@ -159,8 +159,8 @@ describe("Life", () => {
     });
 
     test("top and bottom edges are stitched together [positive]", () => {
-        const cell = { col: 0, row: ROWS };
-        const equivalentCell = { col: 0, row: 0 };
+        const cell = [0, ROWS];
+        const equivalentCell = [0, 0];
 
         expect(life.isCellAlive(cell)).toBe(false);
 
@@ -174,8 +174,8 @@ describe("Life", () => {
     });
 
     test("top and bottom, left and right edges are stitched together [negative]", () => {
-        const cell = { col: -1, row: -1 };
-        const equivalentCell = { col: COLUMNS - 1, row: ROWS - 1 };
+        const cell = [-1, -1];
+        const equivalentCell = [COLUMNS - 1, ROWS - 1];
 
         expect(life.isCellAlive(cell)).toBe(false);
 
@@ -189,8 +189,8 @@ describe("Life", () => {
     });
 
     test("top and bottom, left and right edges are stitched together [positive]", () => {
-        const cell = { col: COLUMNS, row: ROWS };
-        const equivalentCell = { col: 0, row: 0 };
+        const cell = [COLUMNS, ROWS];
+        const equivalentCell = [0, 0];
 
         expect(life.isCellAlive(cell)).toBe(false);
 
@@ -204,7 +204,7 @@ describe("Life", () => {
     });
 
     test("toggleCellState", () => {
-        const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
+        const cell = [Math.trunc(COLUMNS / 2), Math.trunc(ROWS / 2)];
 
         expect(life.isCellAlive(cell)).toBe(false);
 
@@ -216,7 +216,7 @@ describe("Life", () => {
     });
 
     test("next() a live cell with 0 live neighbors dies", () => {
-        const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
+        const cell = [Math.trunc(COLUMNS / 2), Math.trunc(ROWS / 2)];
 
         life.setCellState(cell, Life.CELL_STATE_ALIVE);
         life.nextState();
@@ -225,7 +225,7 @@ describe("Life", () => {
     });
 
     test("next() a live cell with 1 live neighbors dies", () => {
-        const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
+        const cell = [Math.trunc(COLUMNS / 2), Math.trunc(ROWS / 2)];
         const topLeft = getRelativeCell(cell, RELATIVE_CELL_TOP_LEFT);
 
         life.setCellState(cell, Life.CELL_STATE_ALIVE);
@@ -236,7 +236,7 @@ describe("Life", () => {
     });
 
     test("next() a live cell with 2 live neighbors lives", () => {
-        const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
+        const cell = [Math.trunc(COLUMNS / 2), Math.trunc(ROWS / 2)];
         const topLeft = getRelativeCell(cell, RELATIVE_CELL_TOP_LEFT);
         const top = getRelativeCell(cell, RELATIVE_CELL_TOP);
 
@@ -249,7 +249,7 @@ describe("Life", () => {
     });
 
     test("next() a live cell with 2 live neighbors lives [on the top edge]", () => {
-        const cell = { col: Math.trunc(COLUMNS / 2), row: 0 };
+        const cell = [Math.trunc(COLUMNS / 2), 0];
         const topLeft = getRelativeCell(cell, RELATIVE_CELL_TOP_LEFT);
         const top = getRelativeCell(cell, RELATIVE_CELL_TOP);
 
@@ -262,7 +262,7 @@ describe("Life", () => {
     });
 
     test("next() a live cell with 3 live neighbors lives", () => {
-        const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
+        const cell = [Math.trunc(COLUMNS / 2), Math.trunc(ROWS / 2)];
         const topLeft = getRelativeCell(cell, RELATIVE_CELL_TOP_LEFT);
         const top = getRelativeCell(cell, RELATIVE_CELL_TOP);
         const right = getRelativeCell(cell, RELATIVE_CELL_RIGHT);
@@ -277,7 +277,7 @@ describe("Life", () => {
     });
 
     test("next() a live cell with 3 live neighbors lives [on the bottom edge]", () => {
-        const cell = { col: Math.trunc(COLUMNS / 2), row: ROWS - 1 };
+        const cell = [Math.trunc(COLUMNS / 2), ROWS - 1];
         const topLeft = getRelativeCell(cell, RELATIVE_CELL_BOTTOM_LEFT);
         const top = getRelativeCell(cell, RELATIVE_CELL_BOTTOM);
         const right = getRelativeCell(cell, RELATIVE_CELL_RIGHT);
@@ -292,7 +292,7 @@ describe("Life", () => {
     });
 
     test("next() a live cell with 4 live neighbors dies", () => {
-        const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
+        const cell = [Math.trunc(COLUMNS / 2), Math.trunc(ROWS / 2)];
         const topLeft = getRelativeCell(cell, RELATIVE_CELL_TOP_LEFT);
         const top = getRelativeCell(cell, RELATIVE_CELL_TOP);
         const left = getRelativeCell(cell, RELATIVE_CELL_LEFT);
@@ -309,7 +309,7 @@ describe("Life", () => {
     });
 
     test("next() a live cell with 4 live neighbors dies [on the left edge]", () => {
-        const cell = { col: 0, row: Math.trunc(ROWS / 2) };
+        const cell = [0, Math.trunc(ROWS / 2)];
         const topLeft = getRelativeCell(cell, RELATIVE_CELL_TOP_LEFT);
         const top = getRelativeCell(cell, RELATIVE_CELL_TOP);
         const left = getRelativeCell(cell, RELATIVE_CELL_LEFT);
@@ -326,7 +326,7 @@ describe("Life", () => {
     });
 
     test("next() a live cell with 5 live neighbors dies", () => {
-        const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
+        const cell = [Math.trunc(COLUMNS / 2), Math.trunc(ROWS / 2)];
         const topLeft = getRelativeCell(cell, RELATIVE_CELL_TOP_LEFT);
         const top = getRelativeCell(cell, RELATIVE_CELL_TOP);
         const topRight = getRelativeCell(cell, RELATIVE_CELL_TOP_RIGHT);
@@ -345,7 +345,7 @@ describe("Life", () => {
     });
 
     test("next() a live cell with 5 live neighbors dies [on the right edge]", () => {
-        const cell = { col: COLUMNS - 1, row: Math.trunc(ROWS / 2) };
+        const cell = [COLUMNS - 1, Math.trunc(ROWS / 2)];
         const topLeft = getRelativeCell(cell, RELATIVE_CELL_TOP_LEFT);
         const top = getRelativeCell(cell, RELATIVE_CELL_TOP);
         const topRight = getRelativeCell(cell, RELATIVE_CELL_TOP_RIGHT);
@@ -364,7 +364,7 @@ describe("Life", () => {
     });
 
     test("next() a dead cell with 0 live neighbors dies", () => {
-        const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
+        const cell = [Math.trunc(COLUMNS / 2), Math.trunc(ROWS / 2)];
 
         life.setCellState(cell, Life.CELL_STATE_DEAD);
         life.nextState();
@@ -373,7 +373,7 @@ describe("Life", () => {
     });
 
     test("next() a dead cell with 1 live neighbors dies", () => {
-        const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
+        const cell = [Math.trunc(COLUMNS / 2), Math.trunc(ROWS / 2)];
         const bottomRight = getRelativeCell(cell, RELATIVE_CELL_BOTTOM_RIGHT);
 
         life.setCellState(cell, Life.CELL_STATE_DEAD);
@@ -384,7 +384,7 @@ describe("Life", () => {
     });
 
     test("next() a dead cell with 2 live neighbors dies", () => {
-        const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
+        const cell = [Math.trunc(COLUMNS / 2), Math.trunc(ROWS / 2)];
         const bottomRight = getRelativeCell(cell, RELATIVE_CELL_BOTTOM_RIGHT);
         const bottom = getRelativeCell(cell, RELATIVE_CELL_BOTTOM);
 
@@ -397,7 +397,7 @@ describe("Life", () => {
     });
 
     test("next() a dead cell with 3 live neighbors lives", () => {
-        const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
+        const cell = [Math.trunc(COLUMNS / 2), Math.trunc(ROWS / 2)];
         const bottomRight = getRelativeCell(cell, RELATIVE_CELL_BOTTOM_RIGHT);
         const bottom = getRelativeCell(cell, RELATIVE_CELL_BOTTOM);
         const bottomLeft = getRelativeCell(cell, RELATIVE_CELL_BOTTOM_LEFT);
@@ -412,7 +412,7 @@ describe("Life", () => {
     });
 
     test("next() a dead cell with 4 live neighbors dies", () => {
-        const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
+        const cell = [Math.trunc(COLUMNS / 2), Math.trunc(ROWS / 2)];
         const bottomRight = getRelativeCell(cell, RELATIVE_CELL_BOTTOM_RIGHT);
         const bottom = getRelativeCell(cell, RELATIVE_CELL_BOTTOM);
         const bottomLeft = getRelativeCell(cell, RELATIVE_CELL_BOTTOM_LEFT);
@@ -429,7 +429,7 @@ describe("Life", () => {
     });
 
     test("next() a dead cell with 5 live neighbors dies", () => {
-        const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
+        const cell = [Math.trunc(COLUMNS / 2), Math.trunc(ROWS / 2)];
         const bottomRight = getRelativeCell(cell, RELATIVE_CELL_BOTTOM_RIGHT);
         const bottom = getRelativeCell(cell, RELATIVE_CELL_BOTTOM);
         const bottomLeft = getRelativeCell(cell, RELATIVE_CELL_BOTTOM_LEFT);
@@ -448,7 +448,7 @@ describe("Life", () => {
     });
 
     test("next() blinker pattern", () => {
-        const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
+        const cell = [Math.trunc(COLUMNS / 2), Math.trunc(ROWS / 2)];
 
         life.setCellState(cell, Life.CELL_STATE_ALIVE);
         life.setCellState(getRelativeCell(cell, RELATIVE_CELL_LEFT), Life.CELL_STATE_ALIVE);
@@ -463,7 +463,7 @@ describe("Life", () => {
     });
 
     test("next() Tub pattern", () => {
-        const cell = { col: Math.trunc(COLUMNS / 2), row: Math.trunc(ROWS / 2) };
+        const cell = [Math.trunc(COLUMNS / 2), Math.trunc(ROWS / 2)];
 
         life.setCellState(cell, Life.CELL_STATE_DEAD);
         life.setCellState(getRelativeCell(cell, RELATIVE_CELL_LEFT), Life.CELL_STATE_ALIVE);
