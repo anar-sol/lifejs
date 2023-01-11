@@ -82,6 +82,10 @@ class Life {
         grid[col][row] = state;
     }
 
+    static #isSameCell(col1, row1, col2, row2) {
+        return col1 === col2 && row1 === row2;
+    }
+
     #getEquivalentCoord(col, row) {
         if (col >= this.columns) col %= this.columns;
         if (row >= this.rows) row %= this.rows;
@@ -93,16 +97,19 @@ class Life {
     }
 
     #getLivingNeighborCount(cellCol, cellRow) {
-        const neighbors = [];
+        let livingNeighbors = 0;
         for (let col = cellCol - 1; col <= cellCol + 1; col++) {
             for (let row = cellRow - 1; row <= cellRow + 1; row++) {
-                if (this.isCellAlive([col, row]) && !(col === cellCol && row === cellRow)) {
-                    neighbors.push(true);
+                if (!Life.#isSameCell(col, row, cellCol, cellRow) 
+                    && this.isCellAlive([col, row])) {
+                    livingNeighbors++;
                 }
             }
         }
-        return neighbors.length;
+        return livingNeighbors;
     }
+
+
 }
 
 export { Life };
