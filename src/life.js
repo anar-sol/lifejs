@@ -3,11 +3,13 @@ class Life {
     #columns;
     #rows;
     #grid;
+    #onNextState;
 
     constructor(columns, rows) {
         this.#columns = columns;
         this.#rows = rows;
         this.#grid = Life.#newGrid(columns, rows);
+        this.#onNextState = null;
     }
 
     static newLife(columns, rows) {
@@ -28,6 +30,10 @@ class Life {
 
     get rows() {
         return this.#rows;
+    }
+
+    set onNextState(callback) {
+        this.#onNextState = callback;
     }
 
     setCellState([col, row], state) {
@@ -61,6 +67,10 @@ class Life {
             }
         }
         this.#grid = newGrid;
+
+        if (this.#onNextState) {
+            this.#onNextState(this);
+        }
     }
 
     static #newGrid(columns, rows) {

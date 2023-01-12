@@ -484,4 +484,15 @@ describe("Life", () => {
         expect(life.isCellAlive(getRelativeCell(cell, RELATIVE_CELL_TOP))).toBe(true);
         expect(life.isCellAlive(getRelativeCell(cell, RELATIVE_CELL_BOTTOM))).toBe(true);
     });
+
+    test("onNextState", () => {
+        const callback = jest.fn();
+        life.onNextState = callback;
+
+        expect(callback).toBeCalledTimes(0);
+
+        life.nextState();
+        expect(callback).toBeCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith(life);
+    });
 });
