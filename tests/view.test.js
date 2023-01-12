@@ -64,7 +64,7 @@ describe("WebView", () => {
         expect(callback).toHaveBeenCalledWith(cell);
     });
 
-    test("onToggleCellCommand", () => {
+    test("update", () => {
         expect(() => { view.update(); }).toThrow("not implemented");
     });
 });
