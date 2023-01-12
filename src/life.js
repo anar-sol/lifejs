@@ -73,6 +73,10 @@ class Life {
         }
     }
 
+    clear() {
+        this.#grid = Life.#newGrid(this.columns, this.rows);
+    }
+
     static #newGrid(columns, rows) {
         const grid = new Array(columns);
         for (let col = 0; col < columns; col++) {
@@ -110,7 +114,7 @@ class Life {
         let livingNeighbors = 0;
         for (let col = cellCol - 1; col <= cellCol + 1; col++) {
             for (let row = cellRow - 1; row <= cellRow + 1; row++) {
-                if (!Life.#isSameCell(col, row, cellCol, cellRow) 
+                if (!Life.#isSameCell(col, row, cellCol, cellRow)
                     && this.isCellAlive([col, row])) {
                     livingNeighbors++;
                 }

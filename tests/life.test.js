@@ -53,6 +53,30 @@ describe("Life", () => {
         expect(life.rows).toBe(ROWS);
     });
 
+    test("all cells are dead after creation", () => {
+        for (let col = 0; col < life.columns; col++) {
+            for (let row = 0; row < life.rows; row++) {
+                expect(life.isCellAlive([col, row])).toBe(false);
+            }
+        }
+    });
+
+    test("all cells are dead after clear", () => {
+        life.setCellState([0, 0], Life.CELL_STATE_ALIVE);
+        life.setCellState([life.columns - 1, 0], Life.CELL_STATE_ALIVE);
+        life.setCellState([0, life.rows - 1], Life.CELL_STATE_ALIVE);
+        life.setCellState([life.columns - 1, life.rows - 1], Life.CELL_STATE_ALIVE);
+        life.setCellState([Math.trunc(life.columns / 2), Math.trunc(life.rows / 2)], Life.CELL_STATE_ALIVE);
+
+        life.clear();
+
+        for (let col = 0; col < life.columns; col++) {
+            for (let row = 0; row < life.rows; row++) {
+                expect(life.isCellAlive([col, row])).toBe(false);
+            }
+        }
+    });
+
     test("isCellAlive (1, 1)", () => {
         const cell = [1, 1];
 
