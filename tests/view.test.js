@@ -51,4 +51,20 @@ describe("WebView", () => {
         view.resetCommand();
         expect(callback).toBeCalledTimes(1);
     });
+
+    test("onToggleCellCommand", () => {
+        const cell = [10, 8];
+        const callback = jest.fn();
+        view.onToggleCellCommand = callback;
+
+        expect(callback).toBeCalledTimes(0);
+
+        view.toggleCellCommand(cell);
+        expect(callback).toBeCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith(cell);
+    });
+
+    test("onToggleCellCommand", () => {
+        expect(() => { view.update(); }).toThrow("not implemented");
+    });
 });

@@ -4,6 +4,7 @@ class View {
     #onPauseCommand;
     #onNextCommand;
     #onResetCommand;
+    #onToggleCellCommand;
 
     static newView() {
         return new View();
@@ -23,6 +24,10 @@ class View {
 
     set onResetCommand(callback) {
         this.#onResetCommand = callback;
+    }
+
+    set onToggleCellCommand(callback) {
+        this.#onToggleCellCommand = callback;
     }
 
     runCommand(frequency) {
@@ -47,6 +52,16 @@ class View {
         if (this.#onResetCommand) {
             this.#onResetCommand();
         }
+    }
+
+    toggleCellCommand([col, row]) {
+        if (this.#onToggleCellCommand) {
+            this.#onToggleCellCommand([col, row]);
+        }
+    }
+
+    update() {
+        throw new Error("not implemented");
     }
 }
 
