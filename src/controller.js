@@ -41,7 +41,7 @@ class Controller {
     }
 
     update() {
-        this.#view.update();
+        this.#view.update(this.#life);
     }
 }
 

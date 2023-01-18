@@ -171,12 +171,14 @@ describe("Controller", () => {
 
     test("update calls view.update", () => {
         const update = jest.fn();
+        const life = {};
         const view = {
             update: update,
         };
 
-        const controller = Controller.newController({}, view);
+        const controller = Controller.newController(life, view);
         controller.update();
         expect(update).toHaveBeenCalledTimes(1);
+        expect(update).toHaveBeenCalledWith(life);
     });
 });
