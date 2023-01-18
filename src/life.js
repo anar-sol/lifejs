@@ -75,6 +75,9 @@ class Life {
 
     clear() {
         this.#grid = Life.#newGrid(this.columns, this.rows);
+        if (this.#onNextState) {
+            this.#onNextState(this);
+        }
     }
 
     static #newGrid(columns, rows) {
