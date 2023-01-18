@@ -11,7 +11,8 @@ describe("Controller", () => {
 
     afterEach(() => {
         jest.restoreAllMocks();
-      });
+        jest.useRealTimers();
+    });
 
     test("has a run function", () => {
         expect(controller.run).toBeInstanceOf(Function);
@@ -29,6 +30,8 @@ describe("Controller", () => {
     });
 
     test("run calls setInterval", () => {
+        jest.useFakeTimers();
+        jest.spyOn(global, 'clearInterval');
         const fakeSetInterval = jest.fn();
         const intervalID = 123;
         fakeSetInterval.mockReturnValue(intervalID);
@@ -37,7 +40,11 @@ describe("Controller", () => {
 
         controller.run(10);
         expect(fakeSetInterval).toHaveBeenCalledTimes(1);
-        expect(fakeSetInterval).toHaveBeenCalledWith(expect.any(Function), 1000/10);
+        expect(fakeSetInterval).toHaveBeenCalledWith(expect.any(Function), 1000 / 10);
+
+        controller.pause();
+        expect(clearInterval).toHaveBeenCalledTimes(1);
+        expect(clearInterval).toHaveBeenCalledWith(intervalID);
 
         globalThis.setInterval = tmp;
     });
@@ -48,7 +55,7 @@ describe("Controller", () => {
 
         controller.run(10);
         expect(spy).toHaveBeenCalledTimes(0);
-        jest.advanceTimersByTime(1000/10);
+        jest.advanceTimersByTime(1000 / 10);
         expect(spy).toHaveBeenCalledTimes(1);
     });
 
@@ -77,7 +84,7 @@ describe("Controller", () => {
         controller.next();
         expect(nextState).toHaveBeenCalledTimes(1);
     });
-    
+
     test("has a pause function", () => {
         expect(controller.pause).toBeInstanceOf(Function);
     });

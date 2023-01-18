@@ -1,6 +1,7 @@
 class Controller {
     #life;
     #view;
+    #intervalID;
 
     constructor(life, view) {
         view.onRunCommand = this.run;
@@ -20,14 +21,16 @@ class Controller {
     }
 
     run(frequency) {
-        setInterval(() => { this.next(); }, 1000 / frequency);
+        this.#intervalID = setInterval(() => { this.next(); }, 1000 / frequency);
     }
 
     next() {
         this.#life.nextState?.();
     }
 
-    pause() { }
+    pause() {
+        clearInterval(this.#intervalID);
+    }
 
     reset() {
         this.#life.clear();
