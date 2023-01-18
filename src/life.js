@@ -44,6 +44,9 @@ class Life {
     toggleCellState([col, row]) {
         const newState = this.isCellAlive([col, row]) ? Life.CELL_STATE_DEAD : Life.CELL_STATE_ALIVE;
         this.setCellState([col, row], newState);
+        if (this.#onNextState) {
+            this.#onNextState(this);
+        }
     }
 
     isCellAlive([col, row]) {
