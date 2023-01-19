@@ -69,12 +69,21 @@ describe("Life", () => {
         life.setCellState([Math.trunc(life.columns / 2), Math.trunc(life.rows / 2)], Life.CELL_STATE_ALIVE);
 
         life.clear();
-
         for (let col = 0; col < life.columns; col++) {
             for (let row = 0; row < life.rows; row++) {
                 expect(life.isCellAlive([col, row])).toBe(false);
             }
         }
+    });
+
+    test("onNextState callback is called after clear", () => {
+        const callback = jest.fn();
+        life.onNextState = callback;
+
+        expect(callback).toBeCalledTimes(0);
+        life.clear();
+        expect(callback).toBeCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith(life);
     });
 
     test("isCellAlive (1, 1)", () => {
@@ -135,6 +144,16 @@ describe("Life", () => {
 
         life.setCellState(cell, Life.CELL_STATE_DEAD);
         expect(life.isCellAlive(cell)).toBe(false);
+    });
+
+    test("onNextState callback is called after setCellState", () => {
+        const callback = jest.fn();
+        life.onNextState = callback;
+
+        expect(callback).toBeCalledTimes(0);
+        life.setCellState([0, 0], Life.CELL_STATE_ALIVE);
+        expect(callback).toBeCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith(life);
     });
 
     test("left and right edges are stitched together [negative]", () => {
@@ -245,12 +264,22 @@ describe("Life", () => {
         expect(life.isCellAlive(cell)).toBe(false);
     });
 
+    test("onNextState callback is called after toggleCellState", () => {
+        const callback = jest.fn();
+        life.onNextState = callback;
+        const cell = [Math.trunc(life.columns / 2), Math.trunc(life.rows / 2)];
+
+        expect(callback).toBeCalledTimes(0);
+        life.toggleCellState(cell);
+        expect(callback).toBeCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith(life);
+    });
+
     test("next() a live cell with 0 live neighbors dies", () => {
         const cell = [Math.trunc(life.columns / 2), Math.trunc(life.rows / 2)];
 
         life.setCellState(cell, Life.CELL_STATE_ALIVE);
         life.nextState();
-
         expect(life.isCellAlive(cell)).toBe(false);
     });
 
@@ -261,7 +290,6 @@ describe("Life", () => {
         life.setCellState(cell, Life.CELL_STATE_ALIVE);
         life.setCellState(topLeft, Life.CELL_STATE_ALIVE);
         life.nextState();
-
         expect(life.isCellAlive(cell)).toBe(false);
     });
 
@@ -274,11 +302,10 @@ describe("Life", () => {
         life.setCellState(topLeft, Life.CELL_STATE_ALIVE);
         life.setCellState(top, Life.CELL_STATE_ALIVE);
         life.nextState();
-
         expect(life.isCellAlive(cell)).toBe(true);
     });
 
-    test("next() a live cell with 2 live neighbors lives [on the top edge]", () => {
+    test("next() a live cell with 2 live neighbors lives [in the top edge]", () => {
         const cell = [Math.trunc(life.columns / 2), 0];
         const topLeft = getRelativeCell(cell, RELATIVE_CELL_TOP_LEFT);
         const top = getRelativeCell(cell, RELATIVE_CELL_TOP);
@@ -287,7 +314,6 @@ describe("Life", () => {
         life.setCellState(topLeft, Life.CELL_STATE_ALIVE);
         life.setCellState(top, Life.CELL_STATE_ALIVE);
         life.nextState();
-
         expect(life.isCellAlive(cell)).toBe(true);
     });
 
@@ -302,11 +328,10 @@ describe("Life", () => {
         life.setCellState(top, Life.CELL_STATE_ALIVE);
         life.setCellState(right, Life.CELL_STATE_ALIVE);
         life.nextState();
-
         expect(life.isCellAlive(cell)).toBe(true);
     });
 
-    test("next() a live cell with 3 live neighbors lives [on the bottom edge]", () => {
+    test("next() a live cell with 3 live neighbors lives [in the bottom edge]", () => {
         const cell = [Math.trunc(life.columns / 2), life.rows - 1];
         const topLeft = getRelativeCell(cell, RELATIVE_CELL_BOTTOM_LEFT);
         const top = getRelativeCell(cell, RELATIVE_CELL_BOTTOM);
@@ -317,7 +342,6 @@ describe("Life", () => {
         life.setCellState(top, Life.CELL_STATE_ALIVE);
         life.setCellState(right, Life.CELL_STATE_ALIVE);
         life.nextState();
-
         expect(life.isCellAlive(cell)).toBe(true);
     });
 
@@ -334,11 +358,10 @@ describe("Life", () => {
         life.setCellState(left, Life.CELL_STATE_ALIVE);
         life.setCellState(right, Life.CELL_STATE_ALIVE);
         life.nextState();
-
         expect(life.isCellAlive(cell)).toBe(false);
     });
 
-    test("next() a live cell with 4 live neighbors dies [on the left edge]", () => {
+    test("next() a live cell with 4 live neighbors dies [in the left edge]", () => {
         const cell = [0, Math.trunc(life.rows / 2)];
         const topLeft = getRelativeCell(cell, RELATIVE_CELL_TOP_LEFT);
         const top = getRelativeCell(cell, RELATIVE_CELL_TOP);
@@ -351,7 +374,6 @@ describe("Life", () => {
         life.setCellState(left, Life.CELL_STATE_ALIVE);
         life.setCellState(right, Life.CELL_STATE_ALIVE);
         life.nextState();
-
         expect(life.isCellAlive(cell)).toBe(false);
     });
 
@@ -370,11 +392,10 @@ describe("Life", () => {
         life.setCellState(left, Life.CELL_STATE_ALIVE);
         life.setCellState(right, Life.CELL_STATE_ALIVE);
         life.nextState();
-
         expect(life.isCellAlive(cell)).toBe(false);
     });
 
-    test("next() a live cell with 5 live neighbors dies [on the right edge]", () => {
+    test("next() a live cell with 5 live neighbors dies [in the right edge]", () => {
         const cell = [life.columns - 1, Math.trunc(life.rows / 2)];
         const topLeft = getRelativeCell(cell, RELATIVE_CELL_TOP_LEFT);
         const top = getRelativeCell(cell, RELATIVE_CELL_TOP);
@@ -389,7 +410,6 @@ describe("Life", () => {
         life.setCellState(left, Life.CELL_STATE_ALIVE);
         life.setCellState(right, Life.CELL_STATE_ALIVE);
         life.nextState();
-
         expect(life.isCellAlive(cell)).toBe(false);
     });
 
@@ -398,7 +418,6 @@ describe("Life", () => {
 
         life.setCellState(cell, Life.CELL_STATE_DEAD);
         life.nextState();
-
         expect(life.isCellAlive(cell)).toBe(false);
     });
 
@@ -409,7 +428,6 @@ describe("Life", () => {
         life.setCellState(cell, Life.CELL_STATE_DEAD);
         life.setCellState(bottomRight, Life.CELL_STATE_ALIVE);
         life.nextState();
-
         expect(life.isCellAlive(cell)).toBe(false);
     });
 
@@ -422,7 +440,6 @@ describe("Life", () => {
         life.setCellState(bottomRight, Life.CELL_STATE_ALIVE);
         life.setCellState(bottom, Life.CELL_STATE_ALIVE);
         life.nextState();
-
         expect(life.isCellAlive(cell)).toBe(false);
     });
 
@@ -437,7 +454,6 @@ describe("Life", () => {
         life.setCellState(bottom, Life.CELL_STATE_ALIVE);
         life.setCellState(bottomLeft, Life.CELL_STATE_ALIVE);
         life.nextState();
-
         expect(life.isCellAlive(cell)).toBe(true);
     });
 
@@ -454,7 +470,6 @@ describe("Life", () => {
         life.setCellState(bottomLeft, Life.CELL_STATE_ALIVE);
         life.setCellState(top, Life.CELL_STATE_ALIVE);
         life.nextState();
-
         expect(life.isCellAlive(cell)).toBe(false);
     });
 
@@ -473,18 +488,16 @@ describe("Life", () => {
         life.setCellState(top, Life.CELL_STATE_ALIVE);
         life.setCellState(left, Life.CELL_STATE_ALIVE);
         life.nextState();
-
         expect(life.isCellAlive(cell)).toBe(false);
     });
 
     test("next() blinker pattern", () => {
         const cell = [Math.trunc(life.columns / 2), Math.trunc(life.rows / 2)];
-
         life.setCellState(cell, Life.CELL_STATE_ALIVE);
         life.setCellState(getRelativeCell(cell, RELATIVE_CELL_LEFT), Life.CELL_STATE_ALIVE);
         life.setCellState(getRelativeCell(cell, RELATIVE_CELL_RIGHT), Life.CELL_STATE_ALIVE);
-        life.nextState();
 
+        life.nextState();
         expect(life.isCellAlive(cell)).toBe(true);
         expect(life.isCellAlive(getRelativeCell(cell, RELATIVE_CELL_LEFT))).toBe(false);
         expect(life.isCellAlive(getRelativeCell(cell, RELATIVE_CELL_RIGHT))).toBe(false);
@@ -492,16 +505,15 @@ describe("Life", () => {
         expect(life.isCellAlive(getRelativeCell(cell, RELATIVE_CELL_BOTTOM))).toBe(true);
     });
 
-    test("next() Tub pattern", () => {
+    test("next() tub pattern", () => {
         const cell = [Math.trunc(life.columns / 2), Math.trunc(life.rows / 2)];
-
         life.setCellState(cell, Life.CELL_STATE_DEAD);
         life.setCellState(getRelativeCell(cell, RELATIVE_CELL_LEFT), Life.CELL_STATE_ALIVE);
         life.setCellState(getRelativeCell(cell, RELATIVE_CELL_RIGHT), Life.CELL_STATE_ALIVE);
         life.setCellState(getRelativeCell(cell, RELATIVE_CELL_TOP), Life.CELL_STATE_ALIVE);
         life.setCellState(getRelativeCell(cell, RELATIVE_CELL_BOTTOM), Life.CELL_STATE_ALIVE);
-        life.nextState();
 
+        life.nextState();
         expect(life.isCellAlive(cell)).toBe(false);
         expect(life.isCellAlive(getRelativeCell(cell, RELATIVE_CELL_LEFT))).toBe(true);
         expect(life.isCellAlive(getRelativeCell(cell, RELATIVE_CELL_RIGHT))).toBe(true);
@@ -509,12 +521,11 @@ describe("Life", () => {
         expect(life.isCellAlive(getRelativeCell(cell, RELATIVE_CELL_BOTTOM))).toBe(true);
     });
 
-    test("onNextState", () => {
+    test("onNextState callback is called after nextState", () => {
         const callback = jest.fn();
         life.onNextState = callback;
 
         expect(callback).toBeCalledTimes(0);
-
         life.nextState();
         expect(callback).toBeCalledTimes(1);
         expect(callback).toHaveBeenCalledWith(life);

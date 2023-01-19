@@ -39,14 +39,14 @@ class Life {
     setCellState([col, row], state) {
         [col, row] = this.#getEquivalentCoord(col, row);
         Life.#setCellState(this.#grid, col, row, state);
+                if (this.#onNextState) {
+            this.#onNextState(this);
+        }
     }
 
     toggleCellState([col, row]) {
         const newState = this.isCellAlive([col, row]) ? Life.CELL_STATE_DEAD : Life.CELL_STATE_ALIVE;
         this.setCellState([col, row], newState);
-        if (this.#onNextState) {
-            this.#onNextState(this);
-        }
     }
 
     isCellAlive([col, row]) {
