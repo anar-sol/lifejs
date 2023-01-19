@@ -4,16 +4,17 @@ class Controller {
     #intervalID;
 
     constructor(life, view) {
-        view.onRunCommand = this.run;
-        view.onNextCommand = this.next;
-        view.onPauseCommand = this.pause;
-        view.onResetCommand = this.reset;
-        view.onToggleCellCommand = this.toggleCellState;
+        view.onRunCommand = (frequency) => { this.run(frequency); };
+        view.onNextCommand = (steps) => { this.next(steps); };
+        view.onPauseCommand = () => { this.pause(); };
+        view.onResetCommand = () => { this.reset(); };
+        view.onToggleCellCommand = (cell) => { this.toggleCellState(cell); };
 
-        life.onNextState = this.update;
+        life.onNextState = () => { this.update(); };
 
         this.#life = life;
         this.#view = view;
+        this.#intervalID = null;
     }
 
     static newController(life, view) {
@@ -21,7 +22,9 @@ class Controller {
     }
 
     run(frequency) {
-        this.#intervalID = setInterval(() => { this.next(); }, 1000 / frequency);
+        if (this.#intervalID == null) {
+            this.#intervalID = setInterval(() => { this.next(); }, 1000 / frequency);
+        }
     }
 
     next() {
@@ -30,9 +33,11 @@ class Controller {
 
     pause() {
         clearInterval(this.#intervalID);
+        this.#intervalID = null;
     }
 
     reset() {
+        this.pause();
         this.#life.clear();
     }
 
