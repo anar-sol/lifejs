@@ -6,6 +6,14 @@ class View {
     #onResetCommand;
     #onToggleCellCommand;
 
+    constructor() {
+        this.#onRunCommand = null;
+        this.#onPauseCommand = null;
+        this.#onNextCommand = null;
+        this.#onResetCommand = null;
+        this.onToggleCellCommand = null;
+    }
+
     static newView() {
         return new View();
     }

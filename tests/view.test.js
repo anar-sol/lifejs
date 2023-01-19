@@ -14,7 +14,6 @@ describe("WebView", () => {
         view.onRunCommand = callback;
 
         expect(callback).toBeCalledTimes(0);
-
         view.runCommand(freq);
         expect(callback).toBeCalledTimes(1);
         expect(callback).toHaveBeenCalledWith(freq);
@@ -25,7 +24,6 @@ describe("WebView", () => {
         view.onPauseCommand = callback;
 
         expect(callback).toBeCalledTimes(0);
-
         view.pauseCommand();
         expect(callback).toBeCalledTimes(1);
     });
@@ -36,7 +34,6 @@ describe("WebView", () => {
         view.onNextCommand = callback;
 
         expect(callback).toBeCalledTimes(0);
-
         view.nextCommand(steps);
         expect(callback).toBeCalledTimes(1);
         expect(callback).toHaveBeenCalledWith(steps);
@@ -47,7 +44,6 @@ describe("WebView", () => {
         view.onResetCommand = callback;
 
         expect(callback).toBeCalledTimes(0);
-
         view.resetCommand();
         expect(callback).toBeCalledTimes(1);
     });
@@ -58,7 +54,6 @@ describe("WebView", () => {
         view.onToggleCellCommand = callback;
 
         expect(callback).toBeCalledTimes(0);
-
         view.toggleCellCommand(cell);
         expect(callback).toBeCalledTimes(1);
         expect(callback).toHaveBeenCalledWith(cell);
