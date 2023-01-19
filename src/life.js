@@ -39,7 +39,7 @@ class Life {
     setCellState([col, row], state) {
         [col, row] = this.#getEquivalentCoord(col, row);
         Life.#setCellState(this.#grid, col, row, state);
-                if (this.#onNextState) {
+        if (this.#onNextState) {
             this.#onNextState(this);
         }
     }
